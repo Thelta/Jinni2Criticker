@@ -38,7 +38,12 @@ def Login(username, password):
 	click(S("#si_submit"))
 
 def SearchMovie(movie):
-	searchString = movie[0] + " (" + str(movie[1]) + ")"
+	imdbSearch = imdb.search_for_title(movie[0])
+	for imdbMovie in imdbSearch:
+		if int(imdbMovie['year']) == movie[1]:
+			break
+	searchString = imdbMovie['title'] 
+	yearSuffix = " (" + imdbMovie['year'] + ")"
 	click(S("#i_searchbox"))
 	write(searchString, into = S("#i_searchbox"))
 	try:
@@ -46,9 +51,9 @@ def SearchMovie(movie):
 	except LookupError:
 		pass
 	click("Go")
-	search = find_all(Link(searchString))
+	search = find_all(Link(searchString + yearSuffix))
 	if len(search) == 0:
-		print("Can't find: " + searchString)
+		print("Can't find: " + searchString + yearSuffix)
 		return
 	linkIndex = 0
 	for link in search:
@@ -78,6 +83,8 @@ if __name__ == "__main__":
 
 	start_chrome("www.criticker.com")
 	Login(args.username, args.password)
+	
+	imdb = imdbpie.Imdb(anonymize=True)
 
 	for movie in movies:
 		if movie[2] == "Movie":
