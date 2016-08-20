@@ -1,3 +1,6 @@
+import sys
+import argparse
+
 from helium.api import *
 import json
 import time
@@ -21,6 +24,12 @@ moviesString = """[
   ["Veronica Mars",2004,"TV-Series",10]
 ]"""
 
+def AllArgs():
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-username", required = True, help = "Your Criticker.com username")
+	parser.add_argument("-password", required = True, help = "Your Criticker.com password")
+	return parser.parse_args(sys.argv)
+	
 
 def Login(username, password):
 	go_to("https://www.criticker.com/signin.php")
@@ -65,9 +74,10 @@ def SubmitMovieScore(movie):
 if __name__ == "__main__":
     
 	movies = json.loads(moviesString)
+	allArgs = AllArgs() 
 
 	start_chrome("www.criticker.com")
-	Login("*", "*")
+	Login(args['username'], args['password'])
 
 	for movie in movies:
 		if movie[2] == "Movie":
