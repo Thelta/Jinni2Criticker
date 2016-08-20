@@ -1,6 +1,6 @@
 import sys
 import argparse
-
+import imdbpie
 from helium.api import *
 import json
 import time
@@ -28,7 +28,7 @@ def AllArgs():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-username", required = True, help = "Your Criticker.com username")
 	parser.add_argument("-password", required = True, help = "Your Criticker.com password")
-	return parser.parse_args(sys.argv)
+	return parser.parse_args()
 	
 
 def Login(username, password):
@@ -74,10 +74,10 @@ def SubmitMovieScore(movie):
 if __name__ == "__main__":
     
 	movies = json.loads(moviesString)
-	allArgs = AllArgs() 
+	args = AllArgs() 
 
 	start_chrome("www.criticker.com")
-	Login(args['username'], args['password'])
+	Login(args.username, args.password)
 
 	for movie in movies:
 		if movie[2] == "Movie":
